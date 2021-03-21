@@ -180,7 +180,7 @@ function App() {
   const filterByName = () => {
     const arr = []
     card.filter((todo) => {
-      if (todo.name.toLowerCase().startsWith(search) || todo.name.toUpperCase().startsWith(search)) {
+      if (todo.name.toLowerCase().startsWith(search) || todo.name.toUpperCase().startsWith(search) || todo.count.toString().startsWith(search.toString())) {
         arr.push(todo)
       }
     })
