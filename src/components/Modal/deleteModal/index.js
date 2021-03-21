@@ -1,7 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
-import Input from "@material-ui/core/Input";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import { Typography } from "@material-ui/core";
@@ -30,7 +29,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function DeleteModal({ id, closeCard, open, setOpen }) {
   const classes = useStyles();
-  // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
 
   const handleClose = () => {

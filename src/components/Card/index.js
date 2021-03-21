@@ -49,7 +49,6 @@ export default function ProductCard({
   imageUrl,
   name,
   count,
-  size,
   description,
   comments = [],
   weight,
@@ -60,6 +59,7 @@ export default function ProductCard({
   const [openEdit, setOpenEdit] = React.useState(false);
   const [deleteCard, setDeleteCard] = React.useState(false);
   const [value, setValue] = React.useState("");
+
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
@@ -78,9 +78,7 @@ export default function ProductCard({
     );
     setDeleteCard(false);
   };
-  const removeComment = () => {
-  
-  }
+  const removeComment = () => {};
 
   const changeCardInformation = (
     changeUrl,
@@ -90,13 +88,14 @@ export default function ProductCard({
     weight = "",
     id
   ) => {
-    updateCardItem(id, { imageUrl:changeUrl,
-      name:name,
+    updateCardItem(id, {
+      imageUrl: changeUrl,
+      name: name,
       description,
       count,
       weight,
-      id
-})
+      id,
+    });
     setOpenEdit(false);
   };
 
@@ -125,6 +124,7 @@ export default function ProductCard({
       )}
       <Card className={classes.root}>
         <CardHeader
+          style={{ height: "70px" }}
           action={
             <IconButton aria-label="settings">
               <Box>
@@ -182,11 +182,18 @@ export default function ProductCard({
           <CardContent>
             <Typography paragraph>Comments:</Typography>
             {comments.map((elem) => {
-              return <Box> <Typography paragraph>{elem}  <DeleteIcon ml={1} onClick={() => removeComment} /> </Typography>
-              
-                
-              
-              </Box>
+              return (
+                <Box style={{ position: "relative" }}>
+                  {" "}
+                  <Typography paragraph>
+                    {elem}{" "}
+                    <DeleteIcon
+                      style={{ position: "absolute", right: "-4%" }}
+                      onClick={() => removeComment}
+                    />{" "}
+                  </Typography>
+                </Box>
+              );
             })}
           </CardContent>
           <Box m={2}>
