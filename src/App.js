@@ -3,6 +3,7 @@ import { AppBar, Container, Toolbar, Box, Typography, Button, TextField } from '
 import { makeStyles } from '@material-ui/core/styles';
 import ProductCard from '../src/components/Card/index'
 import NewCardModal from './components/Modal/newCardModal';
+import Input from '@material-ui/core/Input'
 
 
 const products = [
@@ -28,7 +29,7 @@ const products = [
       width: 200,
       height: 200
     },
-    description:'Voice commands / smartphone notifications.Contactless payments via Samsung Pay.Health & fitness tracking with heart rate monitor & GPS',
+    description: 'Voice commands / smartphone notifications.Contactless payments via Samsung Pay.Health & fitness tracking with heart rate monitor & GPS',
     weight: '72g',
     comments: ['Battery life: Up to 90 hours', 'Compatible with iOS / Android']
   },
@@ -41,7 +42,7 @@ const products = [
       width: 200,
       height: 200
     },
-    description:'This stylish Timewear men’s watch comes with a black analog dial which beautifully offsets the silver time markers and watch hands. The classic analog display offers a clean and uncluttered interface that is easy to read.',
+    description: 'This stylish Timewear men’s watch comes with a black analog dial which beautifully offsets the silver time markers and watch hands. The classic analog display offers a clean and uncluttered interface that is easy to read.',
     weight: '100g',
     comments: ['Beautifully designed, this silver coloured analog watch with leather bands from Timewear blends classic elegance with modern styling', 'The watch is water resistant, which makes it all the more functional']
   },
@@ -54,7 +55,7 @@ const products = [
       width: 200,
       height: 200
     },
-    description:'Many regard the Saxon watchmaking house as Germany’s answer to Patek Philippe – and recent auctions show that serious money is being paid for both early, complicated pocket watches and the more special pieces produced since Lange’s “new era” began after German reunification.',
+    description: 'Many regard the Saxon watchmaking house as Germany’s answer to Patek Philippe – and recent auctions show that serious money is being paid for both early, complicated pocket watches and the more special pieces produced since Lange’s “new era” began after German reunification.',
     weight: '110g',
     comments: [' While the city ring and the crown-based synchronisation mechanism have both been retained', ' there’s a new movement that powers day and night indicators for each dial and a nifty system to flag locations that use daylight saving time']
   },
@@ -67,7 +68,7 @@ const products = [
       width: 200,
       height: 200
     },
-    description:'If you’ve been following the watch trends of 2020, you’ll know that “integrated bracelets” are where it’s at. Bell & Ross responded with its BR-05 range, which starts with a £3,600 model on rubber and rises to the all-gold range-topper at £27,000. A new chronograph version has just been released too.',
+    description: 'If you’ve been following the watch trends of 2020, you’ll know that “integrated bracelets” are where it’s at. Bell & Ross responded with its BR-05 range, which starts with a £3,600 model on rubber and rises to the all-gold range-topper at £27,000. A new chronograph version has just been released too.',
     weight: '90g',
     comments: ['The watch can come on a black and yellow “carbon effect” calfskin strap or a steel bracelet.', ' Limited to 999 examples']
   },
@@ -80,12 +81,49 @@ const products = [
       width: 200,
       height: 200
     },
-    description:'Breguet is so revered in the watch world that the brand doesn’t need to boost its image through sponsorship – but it is the main backer of Race For Water, a foundation dedicated to preserving H2O. To spread the word, a self-sufficient, Breguet-funded yacht is sailing the world as part of a programme called Odyssey 2017-2021.',
+    description: 'Breguet is so revered in the watch world that the brand doesn’t need to boost its image through sponsorship – but it is the main backer of Race For Water, a foundation dedicated to preserving H2O. To spread the word, a self-sufficient, Breguet-funded yacht is sailing the world as part of a programme called Odyssey 2017-2021.',
     weight: '131g',
     comments: [' Meanwhile, in the world of fine watches, the new Tradition Quantième Rétrograde 7597 deserves top honours.', 'Displaying the extreme levels of fit and finish for which Breguet is famous.']
   },
 ]
-
+const comments = [
+  {
+    id: 3,
+    productId: 1,
+    description: 'some text here',
+    date: Date.now()
+  },
+  {
+    id: 3,
+    productId: 1,
+    description: 'some text here',
+    date: Date.now()
+  },
+  {
+    id: 3,
+    productId: 1,
+    description: 'some text here',
+    date: Date.now()
+  },
+  {
+    id: 3,
+    productId: 1,
+    description: 'some text here',
+    date: Date.now()
+  },
+  {
+    id: 3,
+    productId: 1,
+    description: 'some text here',
+    date: Date.now()
+  },
+  {
+    id: 3,
+    productId: 1,
+    description: 'some text here',
+    date: Date.now()
+  }
+]
 const useStyles = makeStyles((theme) => ({
   root: {
     '& .MuiTextField-root': {
@@ -106,17 +144,23 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(23),
   },
   input: {
-   background: "#999"
+    background: "#999"
   }
-  
+
 }));
 
 function App() {
-  const [open,setOpen] = React.useState(false)
-  const [card,setCard] = React.useState(products)
+  const [open, setOpen] = React.useState(false);
+  const [card, setCard] = React.useState(products);
+  const [search, setSearch] = React.useState('')
+
   const classes = useStyles();
 
-  const addCard = (url,name,description,pieces,weight="",comments) => {
+  const updateCardItem = (id, data) => {
+    setCard(cardsData => cardsData.map(card => card.id === id ? data : card))
+  }
+
+  const addCard = (url, name, description, pieces = "", weight = "", comments = []) => {
     setCard([
       ...card,
       {
@@ -124,7 +168,7 @@ function App() {
         imageUrl: url,
         name,
         description,
-        pieces,
+        count: pieces,
         weight,
         comments
       }
@@ -133,29 +177,44 @@ function App() {
     setOpen(false)
   }
 
-  const closeCard = (id) => {
-    setCard(
-      card.filter((todo) => {
-        return todo.id !==id
-      })
-    )
+  const filterByName = () => {
+    const arr = []
+    card.filter((todo) => {
+      if (todo.name.toLowerCase().startsWith(search) || todo.name.toUpperCase().startsWith(search)) {
+        arr.push(todo)
+      }
+    })
+    setCard(arr);
+
   }
-  
+  React.useEffect(() => {
+    if (search.length === 0) {
+      setCard(products)
+    }
+  }, [search])
+
+
+
+
   return (
     <>
       <AppBar position="fixed">
         <Container fixed>
           <Toolbar>
-                <Box p={1}>
-                <TextField className={classes.input} id="outlined-basic" label="Search by name" color="inherit"  variant="filled"
+            <Box p={1}>
+              <Input className={classes.input} id="outlined-basic" label="Search by name" color="inherit" variant="filled"
                 InputLabelProps={{
                   shrink: true,
                 }}
-                />
-                </Box>
+                value={search} onChange={(e) => {
+                  e.preventDefault();
+                  setSearch(e.target.value)
+                }}
+              />
+            </Box>
             <Box ml={1}>
-                <Button  color="inherit" variant="outlined">Sort</Button>
-                </Box>
+              <Button onClick={() => filterByName()} color="inherit" variant="outlined">Sort</Button>
+            </Box>
             <Box ml={2} >
               <Button onClick={() => setOpen(true)} color="inherit" variant="outlined">New</Button>
             </Box>
@@ -163,24 +222,27 @@ function App() {
         </Container>
       </AppBar>
       <Container maxWidth="lg">
-     <main className={classes.cardsContent}>
-        {card.map(elem => {
-          return <Box mr={3} padding={2}>
-          <ProductCard imageUrl={elem.imageUrl} 
-          name={elem.name} 
-          count={elem.count}
-          size={elem.size}
-          description={elem.description}
-          comments={elem.comments}
-          weight={elem.weight}
-          closeCard={closeCard}
-           />
-        </Box>
-        })}
+        <main className={classes.cardsContent}>
+          {card.map(elem => {
+            return <Box mr={3} padding={2}>
+              <ProductCard imageUrl={elem.imageUrl}
+                name={elem.name}
+                count={elem.count}
+                size={elem.size}
+                description={elem.description}
+                comments={elem.comments}
+                weight={elem.weight}
+                id={elem.id}
+                setCard={setCard}
+                card={card}
+                updateCardItem={updateCardItem}
+              />
+            </Box>
+          })}
         </main>
-        </Container>
-   {open && <NewCardModal addCard={addCard} open={open} setOpen={setOpen} />}
-   
+      </Container>
+      {open && <NewCardModal addCard={addCard} open={open} setOpen={setOpen} />}
+
     </>
   );
 }

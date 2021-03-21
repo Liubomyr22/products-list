@@ -36,7 +36,7 @@ export default function NewCardModal({ addCard, open, setOpen }) {
     const [url, setUrl] = React.useState('');
     const [name, setName] = React.useState('');
     const [description, setDescription] = React.useState('');
-    const [pieces, setPiecses] = React.useState('');
+    const [pieces, setPieces] = React.useState('');
     const [weight, setWeight] = React.useState('');
 
     const handleClose = () => {
@@ -63,7 +63,7 @@ export default function NewCardModal({ addCard, open, setOpen }) {
                     style={{ margin: "8px" }} fullWidth placeholder="Enter description" inputProps={{ 'aria-label': 'description' }} />
                 <Input value={pieces}
                     onChange={(e) => {
-                        setPiecses(e.target.value)
+                        setPieces(e.target.value)
                     }}
                     style={{ margin: "8px" }} fullWidth placeholder="Enter how many pieces is left" inputProps={{ 'aria-label': 'description' }} />
                 <Input value={weight}
