@@ -64,37 +64,13 @@ export default function ProductCard({
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-  // console.log(comment)
 
   const addComment = () => {
     comments.push(value);
     setValue("");
   };
   
-  // React.useEffect(() => {
-  //   db.collection("products")
-  //   .get()
-  //   .then((querySnapshot) => {
-  //       querySnapshot.forEach((doc) => {
-  //           // doc.data() is never undefined for query doc snapshots
-  //         // console.log(doc.id, " => "); 
-  //         if(doc.data().id === id) {
-  //             closeCard(doc.id)
-  //             }
-  //             // console.log(doc.id)
-  //       });
-  //   })
-  //   .catch((error) => {
-  //       console.log("Error getting documents: ", error);
-  //   });
-  // },[id])
-    // console.log(db.collection("products"))
-  // const  closeCard = (id) => {  
-  // //   db.collection('products').forEach((doc) => {
-  //   console.log(id)
-    
-  //   setDeleteCard(false);
-  // };
+
   const removeComment = (comments) => {
    
   };
@@ -137,8 +113,10 @@ export default function ProductCard({
         <DeleteModal
           // closeCard={closeCard}
           id={id}
+          card={card}
+          setCard={setCard}
           open={deleteCard}
-          setOpen={setDeleteCard}
+          setDeleteCard={setDeleteCard}
         />
       )}
       <Card className={classes.root}>

@@ -161,12 +161,11 @@ function App() {
       snapshot.forEach( doc => {
         const data = doc.data()
         products.push(data)
-      //  console.log(data)
       })
       setCard(products)
     })
     .catch( error => console.log(error))
-  },[])
+  })
 
 
   const classes = useStyles();
@@ -175,7 +174,7 @@ function App() {
     setCard(cardsData => cardsData.map(card => card.id === id ? data : card))
   }
  
-  const addCard = (url, name, description, pieces = "", weight = "", comments = []) => {
+  const addCard = (url = "", name = "", description = "", count = 0, weight = "", comments = []) => {
     // setCard([
     //   ...card,
     //   {
@@ -189,43 +188,43 @@ function App() {
     //   }
 
     // ])
-    db.collection('products').add(
+    setCard([...card, db.collection('products').add(
       {
         id: card.length + 1,
             imageUrl: url,
             name,
             description,
-            count: pieces,
+            count,
             weight,
             comments
       }
-    )
+    )])
+    
     setOpen(false)
   }
 
   const filterByName = () => {
-    const arr = []
-    card.forEach((todo) => {
-      if (todo.name.toLowerCase().startsWith(search) || todo.name.toUpperCase().startsWith(search) || todo.count.toString().startsWith(search.toString())) {
-        arr.push(todo)
-      }
-    })
-    setCard(arr);
-  }
-  React.useEffect(() => {
-    if (search.length === 0) {
-      db.collection('products').get().then( snapshot => {
-        const products = []
-        snapshot.forEach( doc => {
-          const data = doc.data()
-          products.push(data)
-         
 
-        })
-        setCard(products)
-      })
-    }
-  },[search])
+   setCard(card.filter(({name}) => {
+     if(name.includes(search)) {
+       return card
+     }
+   }))
+    //  setCard([...card].filter(elem => elem.includes(search)).map(element => <>{element}</>))
+  }
+
+  // React.useEffect(() => {
+  //   if (search.length === 0) {
+  //     return db.collection('products').get().then( snapshot => {
+  //       const products = []
+  //       snapshot.forEach( doc => {
+  //         const data = doc.data()
+  //         products.push(data)
+  //       })
+  //       setCard(products)
+  //     })
+  //   }
+  // },[search])
 
   return (
     <>
@@ -233,7 +232,7 @@ function App() {
         <Container fixed>
           <Toolbar>
             <Box p={1}>
-              <Input className={classes.input} id="outlined-basic" label="Search by name"  variant="filled"
+              <Input className={classes.input}  id="outlined-basic" label="Search by name"  variant="filled"
                 InputLabelProps={{
                   shrink: true,
                 }}

@@ -4,7 +4,7 @@ import Modal from '@material-ui/core/Modal';
 // import Input from '@material-ui/core/Input';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
-import { Typography } from "@material-ui/core";
+import { Card, Typography } from "@material-ui/core";
 import {db}  from '../../../services/firebase'
 
 
@@ -30,10 +30,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function EditModal({open,setOpen,id }) {
+export default function DeleteModal({open,setDeleteCard,id,card,setCard }) {
   const classes = useStyles();
-  // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
+  const [x,setX] = React.useState('');
 
   React.useEffect(() => {
     db.collection("products")
@@ -41,8 +41,7 @@ export default function EditModal({open,setOpen,id }) {
     .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
           if(doc.data().id === id) {
-              // closeCard(doc.id)
-              
+              setX(doc.id)
               }
         });
     })
@@ -52,15 +51,11 @@ export default function EditModal({open,setOpen,id }) {
   },[id])
 
   
-  const  closeCard = (x) => {  
-      // db.collection('products').doc().delete()
-      console.log(x)
-      // setOpen(true)
+  const  closeCard = (id = x) => { 
+     db.collection('products').doc(id).delete()
+      setDeleteCard(false)
+      setCard(card)
     };
-
-  // const handleClose = () => {
-  //   setOpen(false);
-  // };
 
   const body = (
     <div style={modalStyle} className={classes.paper}>
@@ -76,7 +71,7 @@ export default function EditModal({open,setOpen,id }) {
           Delete
         </Button>
         <Button
-          onClick={() => setOpen(false)}
+          onClick={() => setDeleteCard(false)}
           style={{ marginLeft: "10px" }}
           color="inherit"
           variant="outlined"
@@ -91,7 +86,7 @@ export default function EditModal({open,setOpen,id }) {
     <div>
       <Modal
         open={open}
-        onClose={setOpen(false)}
+        onClose={() => setDeleteCard(false)}
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
       >
