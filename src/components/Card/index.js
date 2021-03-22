@@ -1,4 +1,5 @@
 import React from "react";
+import {db}  from '../../services/firebase'
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import Card from "@material-ui/core/Card";
@@ -69,16 +70,34 @@ export default function ProductCard({
     comments.push(value);
     setValue("");
   };
-
-  const closeCard = (id) => {
-    setCard(
-      card.filter((todo) => {
-        return todo.id !== id;
-      })
-    );
-    setDeleteCard(false);
+  
+  // React.useEffect(() => {
+  //   db.collection("products")
+  //   .get()
+  //   .then((querySnapshot) => {
+  //       querySnapshot.forEach((doc) => {
+  //           // doc.data() is never undefined for query doc snapshots
+  //         // console.log(doc.id, " => "); 
+  //         if(doc.data().id === id) {
+  //             closeCard(doc.id)
+  //             }
+  //             // console.log(doc.id)
+  //       });
+  //   })
+  //   .catch((error) => {
+  //       console.log("Error getting documents: ", error);
+  //   });
+  // },[id])
+    // console.log(db.collection("products"))
+  // const  closeCard = (id) => {  
+  // //   db.collection('products').forEach((doc) => {
+  //   console.log(id)
+    
+  //   setDeleteCard(false);
+  // };
+  const removeComment = (comments) => {
+   
   };
-  const removeComment = () => {};
 
   const changeCardInformation = (
     changeUrl,
@@ -116,7 +135,7 @@ export default function ProductCard({
       )}
       {deleteCard && (
         <DeleteModal
-          closeCard={closeCard}
+          // closeCard={closeCard}
           id={id}
           open={deleteCard}
           setOpen={setDeleteCard}
@@ -183,13 +202,13 @@ export default function ProductCard({
             <Typography paragraph>Comments:</Typography>
             {comments.map((elem) => {
               return (
-                <Box style={{ position: "relative" }}>
+                <Box key={elem.comments} style={{ position: "relative" }}>
                   {" "}
                   <Typography paragraph>
                     {elem}{" "}
                     <DeleteIcon
                       style={{ position: "absolute", right: "-4%" }}
-                      onClick={() => removeComment}
+                      onClick={removeComment}
                     />{" "}
                   </Typography>
                 </Box>

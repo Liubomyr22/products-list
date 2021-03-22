@@ -1,5 +1,5 @@
-import React from 'react';
-import { db, auth} from './services/firebase';
+import React, { useEffect } from 'react';
+import { db } from './services/firebase';
 import { AppBar, Container, Toolbar, Box, Typography, Button, TextField } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
 import ProductCard from '../src/components/Card/index'
@@ -87,44 +87,44 @@ import Input from '@material-ui/core/Input'
 //     comments: [' Meanwhile, in the world of fine watches, the new Tradition Quantième Rétrograde 7597 deserves top honours.', 'Displaying the extreme levels of fit and finish for which Breguet is famous.']
 //   },
 // ]
-const comments = [
-  {
-    id: 3,
-    productId: 1,
-    description: 'some text here',
-    date: Date.now()
-  },
-  {
-    id: 3,
-    productId: 1,
-    description: 'some text here',
-    date: Date.now()
-  },
-  {
-    id: 3,
-    productId: 1,
-    description: 'some text here',
-    date: Date.now()
-  },
-  {
-    id: 3,
-    productId: 1,
-    description: 'some text here',
-    date: Date.now()
-  },
-  {
-    id: 3,
-    productId: 1,
-    description: 'some text here',
-    date: Date.now()
-  },
-  {
-    id: 3,
-    productId: 1,
-    description: 'some text here',
-    date: Date.now()
-  }
-]
+// const comments = [
+//   {
+//     id: 3,
+//     productId: 1,
+//     description: 'some text here',
+//     date: Date.now()
+//   },
+//   {
+//     id: 3,
+//     productId: 1,
+//     description: 'some text here',
+//     date: Date.now()
+//   },
+//   {
+//     id: 3,
+//     productId: 1,
+//     description: 'some text here',
+//     date: Date.now()
+//   },
+//   {
+//     id: 3,
+//     productId: 1,
+//     description: 'some text here',
+//     date: Date.now()
+//   },
+//   {
+//     id: 3,
+//     productId: 1,
+//     description: 'some text here',
+//     date: Date.now()
+//   },
+//   {
+//     id: 3,
+//     productId: 1,
+//     description: 'some text here',
+//     date: Date.now()
+//   }
+// ]
 const useStyles = makeStyles((theme) => ({
   root: {
     '& .MuiTextField-root': {
@@ -161,11 +161,14 @@ function App() {
       snapshot.forEach( doc => {
         const data = doc.data()
         products.push(data)
+      //  console.log(data)
       })
       setCard(products)
     })
     .catch( error => console.log(error))
   },[])
+
+
   const classes = useStyles();
 
   const updateCardItem = (id, data) => {
@@ -173,37 +176,56 @@ function App() {
   }
  
   const addCard = (url, name, description, pieces = "", weight = "", comments = []) => {
-    setCard([
-      ...card,
+    // setCard([
+    //   ...card,
+    //   {
+    //     id: card.length + 1,
+    //     imageUrl: url,
+    //     name,
+    //     description,
+    //     count: pieces,
+    //     weight,
+    //     comments
+    //   }
+
+    // ])
+    db.collection('products').add(
       {
         id: card.length + 1,
-        imageUrl: url,
-        name,
-        description,
-        count: pieces,
-        weight,
-        comments
+            imageUrl: url,
+            name,
+            description,
+            count: pieces,
+            weight,
+            comments
       }
-
-    ])
+    )
     setOpen(false)
   }
 
   const filterByName = () => {
     const arr = []
-    card.filter((todo) => {
+    card.forEach((todo) => {
       if (todo.name.toLowerCase().startsWith(search) || todo.name.toUpperCase().startsWith(search) || todo.count.toString().startsWith(search.toString())) {
         arr.push(todo)
       }
     })
     setCard(arr);
-
   }
   React.useEffect(() => {
     if (search.length === 0) {
-      setCard(card)
+      db.collection('products').get().then( snapshot => {
+        const products = []
+        snapshot.forEach( doc => {
+          const data = doc.data()
+          products.push(data)
+         
+
+        })
+        setCard(products)
+      })
     }
-  }, [search])
+  },[search])
 
   return (
     <>
@@ -211,7 +233,7 @@ function App() {
         <Container fixed>
           <Toolbar>
             <Box p={1}>
-              <Input className={classes.input} id="outlined-basic" label="Search by name" color="inherit" variant="filled"
+              <Input className={classes.input} id="outlined-basic" label="Search by name"  variant="filled"
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -233,8 +255,8 @@ function App() {
       <Container maxWidth="lg">
         <main className={classes.cardsContent}>
           {card.map(elem => {
-            return <Box mr={3} padding={2}>
-              <ProductCard imageUrl={elem.imageUrl}
+            return <Box key={elem.id} mr={3} padding={2}>
+              <ProductCard key={elem.id} imageUrl={elem.imageUrl}
                 name={elem.name}
                 count={elem.count}
                 size={elem.size}
