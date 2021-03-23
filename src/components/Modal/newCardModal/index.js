@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function NewCardModal({ comments=[], addCard, open, setOpen, weirdId }) {
+export default function NewCardModal({ comments = [], addCard, open, setOpen, weirdId }) {
   const classes = useStyles();
   const [modalStyle] = React.useState(getModalStyle);
   const [url, setUrl] = React.useState("");

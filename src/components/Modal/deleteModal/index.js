@@ -43,7 +43,6 @@ export default function DeleteModal({ open, setDeleteCard, id, card, setCard }) 
       card.filter(elem => elem.weirdId !== id)
     )
     db.collection('products').doc(id).delete()
-    console.log({ id })
     setDeleteCard(false)
   };
 

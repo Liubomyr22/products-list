@@ -167,7 +167,7 @@ function App() {
 
   return (
     <>
-      {open && <NewCardModal card={card} setCard={setCard} addCard={addCard} open={open} setOpen={setOpen} />}
+      {open && <NewCardModal  card={card} setCard={setCard} addCard={addCard} open={open} setOpen={setOpen} />}
       <AppBar position="fixed">
         <Container fixed>
           <Toolbar>
@@ -183,13 +183,13 @@ function App() {
               />
             </Box>
             <Box ml={1}>
-              <Button onClick={() => filterByName()} color="inherit" variant="outlined">Sort by name</Button>
+              <Button style={{height:"38px",padding: "7px" ,fontSize: "11px"}} onClick={() => filterByName()} color="inherit" variant="outlined">Sort by name</Button>
             </Box>
             <Box ml={1}>
-              <Button onClick={() => filterByCount()} color="inherit" variant="outlined">Sort by count</Button>
+              <Button style={{height:"38px",padding: "7px" ,fontSize: "11px"}} onClick={() => filterByCount()} color="inherit" variant="outlined">Sort by count</Button>
             </Box>
             <Box ml={2} >
-              <Button onClick={() => setOpen(true)} color="inherit" variant="outlined">New</Button>
+              <Button style={{height:"38px",padding: "7px" ,fontSize: "12px"}} onClick={() => setOpen(true)} color="inherit" variant="outlined">New</Button>
             </Box>
           </Toolbar>
         </Container>

@@ -38,8 +38,9 @@ const useStyles = makeStyles((theme) => ({
   },
   description: {
     height: "80px",
-    overflow: "auto",
-  },
+    overflow:"auto"
+  
+  }
 }));
 
 export default function ProductCard({
@@ -81,7 +82,6 @@ export default function ProductCard({
         comments.splice(i,1)
       }
     }
-  console.log(comments)
   setCommentar(!commentar)
   };
 
@@ -146,9 +146,9 @@ export default function ProductCard({
           }
           title={name}
         />
-        <CardMedia className={classes.media} image={imageUrl} />
-        <CardContent>
-          <Typography
+        <CardMedia  className={classes.media} image={imageUrl} />
+        <CardContent >
+          <Typography 
             className={classes.description}
             variant="body2"
             color="textSecondary"
@@ -195,7 +195,7 @@ export default function ProductCard({
             <Typography paragraph>Comments:</Typography>
             {comments.map((elem) => {
               return (
-                <Box key={elem} style={{ position: "relative" }}>
+                <Box key={Date.now()} style={{ position: "relative" }}>
                   {" "}
                   <Typography paragraph>
                     {elem}{" "}
