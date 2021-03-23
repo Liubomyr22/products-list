@@ -1,5 +1,5 @@
 import React from "react";
-import {db}  from '../../services/firebase'
+import { db } from "../../services/firebase";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import Card from "@material-ui/core/Card";
@@ -54,6 +54,7 @@ export default function ProductCard({
   comments = [],
   weight,
   updateCardItem,
+  weirdId,
 }) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
@@ -69,11 +70,8 @@ export default function ProductCard({
     comments.push(value);
     setValue("");
   };
-  
 
-  const removeComment = (comments) => {
-   
-  };
+  const removeComment = (comments) => {};
 
   const changeCardInformation = (
     changeUrl,
@@ -81,7 +79,8 @@ export default function ProductCard({
     description,
     count,
     weight = "",
-    id
+    id,
+    weirdId
   ) => {
     updateCardItem(id, {
       imageUrl: changeUrl,
@@ -90,6 +89,7 @@ export default function ProductCard({
       count,
       weight,
       id,
+      weirdId
     });
     setOpenEdit(false);
   };
@@ -112,7 +112,7 @@ export default function ProductCard({
       {deleteCard && (
         <DeleteModal
           // closeCard={closeCard}
-          id={id}
+          id={weirdId}
           card={card}
           setCard={setCard}
           open={deleteCard}

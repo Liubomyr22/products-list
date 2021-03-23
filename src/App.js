@@ -159,22 +159,25 @@ function App() {
     db.collection('products').get().then( snapshot => {
       const products = []
       snapshot.forEach( doc => {
+        
         const data = doc.data()
+        data.weirdId = doc.id;
         products.push(data)
       })
+      console.log({products, } )
       setCard(products)
     })
     .catch( error => console.log(error))
-  })
+  },[setCard])
 
-
+  console.log('hello world')
   const classes = useStyles();
 
   const updateCardItem = (id, data) => {
     setCard(cardsData => cardsData.map(card => card.id === id ? data : card))
   }
  
-  const addCard = (url = "", name = "", description = "", count = 0, weight = "", comments = []) => {
+  const addCard = ( weirdId, url = "", name = "", description = "", count = 0, weight = "", comments = []) => {
     // setCard([
     //   ...card,
     //   {
@@ -196,7 +199,8 @@ function App() {
             description,
             count,
             weight,
-            comments
+            comments,
+            weirdId
       }
     )])
     
@@ -205,12 +209,8 @@ function App() {
 
   const filterByName = () => {
 
-   setCard(card.filter(({name}) => {
-     if(name.includes(search)) {
-       return card
-     }
-   }))
-    //  setCard([...card].filter(elem => elem.includes(search)).map(element => <>{element}</>))
+ setCard(card => card.filter(elem => elem.name.toLowerCase().includes(search) || elem.name.toUpperCase().includes(search)))
+   
   }
 
   // React.useEffect(() => {
@@ -254,8 +254,8 @@ function App() {
       <Container maxWidth="lg">
         <main className={classes.cardsContent}>
           {card.map(elem => {
-            return <Box key={elem.id} mr={3} padding={2}>
-              <ProductCard key={elem.id} imageUrl={elem.imageUrl}
+            return <Box  mr={3} padding={2}>
+              <ProductCard key={Date.now()}  imageUrl={elem.imageUrl}
                 name={elem.name}
                 count={elem.count}
                 size={elem.size}
@@ -266,6 +266,7 @@ function App() {
                 setCard={setCard}
                 card={card}
                 updateCardItem={updateCardItem}
+                weirdId={elem.weirdId}
               />
             </Box>
           })}

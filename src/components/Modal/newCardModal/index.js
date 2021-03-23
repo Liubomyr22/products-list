@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function NewCardModal({ addCard, open, setOpen }) {
+export default function NewCardModal({ addCard, open, setOpen,weirdId }) {
   const classes = useStyles();
   const [modalStyle] = React.useState(getModalStyle);
   const [url, setUrl] = React.useState("");
@@ -36,6 +36,7 @@ export default function NewCardModal({ addCard, open, setOpen }) {
   const [description, setDescription] = React.useState("");
   const [pieces, setPieces] = React.useState("");
   const [weight, setWeight] = React.useState("");
+  
 
   const handleClose = () => {
     setOpen(false);
@@ -99,7 +100,7 @@ export default function NewCardModal({ addCard, open, setOpen }) {
           <Button
             onClick={(e) => {
               e.preventDefault();
-              addCard(url, name, description, pieces, weight);
+              addCard(url, name, description, pieces, weight,weirdId);
             }}
             color="inherit"
             variant="outlined"
