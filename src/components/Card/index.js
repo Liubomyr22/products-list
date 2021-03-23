@@ -1,5 +1,4 @@
 import React from "react";
-import { db } from "../../services/firebase";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import Card from "@material-ui/core/Card";
@@ -54,24 +53,37 @@ export default function ProductCard({
   comments = [],
   weight,
   updateCardItem,
-  weirdId,
+  setOpen,
+  wId,
 }) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
   const [openEdit, setOpenEdit] = React.useState(false);
   const [deleteCard, setDeleteCard] = React.useState(false);
   const [value, setValue] = React.useState("");
+  const [commentar,setCommentar] = React.useState(false);
+
+  React.useEffect(() => {
+  },[commentar])
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
   const addComment = () => {
-    comments.push(value);
+    comments.push(value)
     setValue("");
   };
 
-  const removeComment = (comments) => {};
+  const removeComment = (comment) => {
+    for(let i = 0; i <= comments.length;i++){
+      if(comments[i] === comment) {
+        comments.splice(i,1)
+      }
+    }
+  console.log(comments)
+  setCommentar(!commentar)
+  };
 
   const changeCardInformation = (
     changeUrl,
@@ -80,7 +92,7 @@ export default function ProductCard({
     count,
     weight = "",
     id,
-    weirdId
+    wId
   ) => {
     updateCardItem(id, {
       imageUrl: changeUrl,
@@ -89,10 +101,11 @@ export default function ProductCard({
       count,
       weight,
       id,
-      weirdId
+      wId, 
+      comments
     });
     setOpenEdit(false);
-  };
+  }; 
 
   return (
     <>
@@ -107,12 +120,14 @@ export default function ProductCard({
           count={count}
           description={description}
           weight={weight}
+          weirdId={wId}
+          comments={comments}
         />
       )}
       {deleteCard && (
         <DeleteModal
-          // closeCard={closeCard}
-          id={weirdId}
+        setCloseCard={setOpen}
+          id={wId}
           card={card}
           setCard={setCard}
           open={deleteCard}
@@ -180,13 +195,13 @@ export default function ProductCard({
             <Typography paragraph>Comments:</Typography>
             {comments.map((elem) => {
               return (
-                <Box key={elem.comments} style={{ position: "relative" }}>
+                <Box key={elem} style={{ position: "relative" }}>
                   {" "}
                   <Typography paragraph>
                     {elem}{" "}
                     <DeleteIcon
                       style={{ position: "absolute", right: "-4%" }}
-                      onClick={removeComment}
+                      onClick={() => removeComment(elem)}
                     />{" "}
                   </Typography>
                 </Box>

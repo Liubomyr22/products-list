@@ -4,6 +4,7 @@ import Modal from "@material-ui/core/Modal";
 import Input from "@material-ui/core/Input";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
+import { db } from '../../../services/firebase'
 
 function getModalStyle() {
   const top = 50;
@@ -28,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function NewCardModal({ addCard, open, setOpen,weirdId }) {
+export default function NewCardModal({ comments=[], addCard, open, setOpen, weirdId }) {
   const classes = useStyles();
   const [modalStyle] = React.useState(getModalStyle);
   const [url, setUrl] = React.useState("");
@@ -36,7 +37,6 @@ export default function NewCardModal({ addCard, open, setOpen,weirdId }) {
   const [description, setDescription] = React.useState("");
   const [pieces, setPieces] = React.useState("");
   const [weight, setWeight] = React.useState("");
-  
 
   const handleClose = () => {
     setOpen(false);
@@ -95,12 +95,22 @@ export default function NewCardModal({ addCard, open, setOpen,weirdId }) {
           placeholder="Enter weight of product"
           inputProps={{ "aria-label": "description" }}
         />
-
         <Box mt={2} ml={1}>
           <Button
             onClick={(e) => {
-              e.preventDefault();
-              addCard(url, name, description, pieces, weight,weirdId);
+              e.preventDefault()
+              db.collection('products').add(
+                {
+                  id: Date.now(),
+                  imageUrl: url,
+                  name,
+                  description,
+                  count: pieces,
+                  weight,
+                  comments
+                })
+
+              addCard(url, name, description, pieces, weight, weirdId)
             }}
             color="inherit"
             variant="outlined"

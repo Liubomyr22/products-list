@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { db } from './services/firebase';
-import { AppBar, Container, Toolbar, Box, Typography, Button, TextField } from '@material-ui/core'
+import { AppBar, Container, Toolbar, Box, Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
 import ProductCard from '../src/components/Card/index'
 import NewCardModal from './components/Modal/newCardModal';
@@ -87,44 +87,7 @@ import Input from '@material-ui/core/Input'
 //     comments: [' Meanwhile, in the world of fine watches, the new Tradition Quantième Rétrograde 7597 deserves top honours.', 'Displaying the extreme levels of fit and finish for which Breguet is famous.']
 //   },
 // ]
-// const comments = [
-//   {
-//     id: 3,
-//     productId: 1,
-//     description: 'some text here',
-//     date: Date.now()
-//   },
-//   {
-//     id: 3,
-//     productId: 1,
-//     description: 'some text here',
-//     date: Date.now()
-//   },
-//   {
-//     id: 3,
-//     productId: 1,
-//     description: 'some text here',
-//     date: Date.now()
-//   },
-//   {
-//     id: 3,
-//     productId: 1,
-//     description: 'some text here',
-//     date: Date.now()
-//   },
-//   {
-//     id: 3,
-//     productId: 1,
-//     description: 'some text here',
-//     date: Date.now()
-//   },
-//   {
-//     id: 3,
-//     productId: 1,
-//     description: 'some text here',
-//     date: Date.now()
-//   }
-// ]
+
 const useStyles = makeStyles((theme) => ({
   root: {
     '& .MuiTextField-root': {
@@ -147,92 +110,69 @@ const useStyles = makeStyles((theme) => ({
   input: {
     background: "#999"
   }
-
 }));
 
 function App() {
   const [open, setOpen] = React.useState(false);
   const [card, setCard] = React.useState([]);
   const [search, setSearch] = React.useState('')
-  
+
   React.useEffect(() => {
-    db.collection('products').get().then( snapshot => {
+    db.collection('products').get().then(snapshot => {
       const products = []
-      snapshot.forEach( doc => {
-        
+      snapshot.forEach(doc => {
         const data = doc.data()
         data.weirdId = doc.id;
         products.push(data)
       })
-      console.log({products, } )
       setCard(products)
     })
-    .catch( error => console.log(error))
-  },[setCard])
+      .catch(error => console.log(error))
+  }, [open])
 
-  console.log('hello world')
+  // console.log('hello world')
+
   const classes = useStyles();
 
   const updateCardItem = (id, data) => {
     setCard(cardsData => cardsData.map(card => card.id === id ? data : card))
   }
- 
-  const addCard = ( weirdId, url = "", name = "", description = "", count = 0, weight = "", comments = []) => {
-    // setCard([
-    //   ...card,
-    //   {
-    //     id: card.length + 1,
-    //     imageUrl: url,
-    //     name,
-    //     description,
-    //     count: pieces,
-    //     weight,
-    //     comments
-    //   }
 
-    // ])
-    setCard([...card, db.collection('products').add(
-      {
-        id: card.length + 1,
-            imageUrl: url,
-            name,
-            description,
-            count,
-            weight,
-            comments,
-            weirdId
-      }
-    )])
-    
+  const addCard = () => {
+    setCard([...card])
     setOpen(false)
   }
 
   const filterByName = () => {
-
- setCard(card => card.filter(elem => elem.name.toLowerCase().includes(search) || elem.name.toUpperCase().includes(search)))
-   
+    setCard(card => card.filter(elem => elem.name.toLowerCase().includes(search) || elem.name.toUpperCase().includes(search)))
   }
 
-  // React.useEffect(() => {
-  //   if (search.length === 0) {
-  //     return db.collection('products').get().then( snapshot => {
-  //       const products = []
-  //       snapshot.forEach( doc => {
-  //         const data = doc.data()
-  //         products.push(data)
-  //       })
-  //       setCard(products)
-  //     })
-  //   }
-  // },[search])
+  const filterByCount = () => {
+    setCard(card => card.filter(elem => elem.count.toString().includes(search)))
+  }
+
+  React.useEffect(() => {
+    if (search.length === 0) {
+      return db.collection('products').get().then(snapshot => {
+        const products = []
+        snapshot.forEach(doc => {
+          const data = doc.data()
+          data.weirdId = doc.id;
+          products.push(data)
+        })
+        setCard(products)
+      })
+    }
+  }, [search])
 
   return (
     <>
+      {open && <NewCardModal card={card} setCard={setCard} addCard={addCard} open={open} setOpen={setOpen} />}
       <AppBar position="fixed">
         <Container fixed>
           <Toolbar>
             <Box p={1}>
-              <Input className={classes.input}  id="outlined-basic" label="Search by name"  variant="filled"
+              <Input className={classes.input} placeholder="Enter name or count" id="outlined-basic" label="Search by name" variant="filled"
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -243,7 +183,10 @@ function App() {
               />
             </Box>
             <Box ml={1}>
-              <Button onClick={() => filterByName()} color="inherit" variant="outlined">Sort</Button>
+              <Button onClick={() => filterByName()} color="inherit" variant="outlined">Sort by name</Button>
+            </Box>
+            <Box ml={1}>
+              <Button onClick={() => filterByCount()} color="inherit" variant="outlined">Sort by count</Button>
             </Box>
             <Box ml={2} >
               <Button onClick={() => setOpen(true)} color="inherit" variant="outlined">New</Button>
@@ -254,8 +197,8 @@ function App() {
       <Container maxWidth="lg">
         <main className={classes.cardsContent}>
           {card.map(elem => {
-            return <Box  mr={3} padding={2}>
-              <ProductCard key={Date.now()}  imageUrl={elem.imageUrl}
+            return <Box key={elem.id} mr={3} padding={2}>
+              <ProductCard key={elem.weirdId} imageUrl={elem.imageUrl}
                 name={elem.name}
                 count={elem.count}
                 size={elem.size}
@@ -263,17 +206,17 @@ function App() {
                 comments={elem.comments}
                 weight={elem.weight}
                 id={elem.id}
+                addCard={addCard}
                 setCard={setCard}
                 card={card}
                 updateCardItem={updateCardItem}
-                weirdId={elem.weirdId}
+                wId={elem.weirdId}
+                setOpen={setOpen}
               />
             </Box>
           })}
         </main>
       </Container>
-      {open && <NewCardModal addCard={addCard} open={open} setOpen={setOpen} />}
-
     </>
   );
 }

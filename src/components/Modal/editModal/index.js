@@ -115,7 +115,7 @@ export default function EditModal({
               changeDescription,
               changePieces,
               changeWeight,
-              id
+              id,
             );
           }}
           color="inherit"
