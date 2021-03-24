@@ -38,7 +38,8 @@ const useStyles = makeStyles((theme) => ({
   },
   description: {
     height: "80px",
-    overflow:"auto"
+    overflow:"auto",
+  
   
   }
 }));
@@ -72,12 +73,16 @@ export default function ProductCard({
   };
 
   const addComment = () => {
-    comments.push(value)
+    if(value.length > 0){
+      comments.push(value)
+    } 
     setValue("");
+    console.log(comments)
+   
   };
-
+console.log("hello luco")
   const removeComment = (comment) => {
-    for(let i = 0; i <= comments.length;i++){
+    for(let i = 0; i < comments.length;i++){
       if(comments[i] === comment) {
         comments.splice(i,1)
       }
@@ -195,14 +200,14 @@ export default function ProductCard({
             <Typography paragraph>Comments:</Typography>
             {comments.map((elem) => {
               return (
-                <Box key={Date.now()} style={{ position: "relative" }}>
-                  {" "}
+                <Box  style={{ position: "relative" }}>
+                
                   <Typography paragraph>
-                    {elem}{" "}
+                    {elem}
                     <DeleteIcon
                       style={{ position: "absolute", right: "-4%" }}
                       onClick={() => removeComment(elem)}
-                    />{" "}
+                    />
                   </Typography>
                 </Box>
               );
@@ -212,6 +217,7 @@ export default function ProductCard({
             <TextField
               value={value}
               onChange={(e) => {
+                e.preventDefault()
                 setValue(e.target.value);
               }}
               fullWidth
@@ -221,7 +227,7 @@ export default function ProductCard({
           </Box>
           <Box m={1}>
             <Button
-              onClick={addComment}
+              onClick={() => addComment()}
               fullWidth
               variant="contained"
               color="primary"

@@ -4,7 +4,6 @@ import Modal from "@material-ui/core/Modal";
 import Input from "@material-ui/core/Input";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
-import { db } from '../../../services/firebase'
 
 function getModalStyle() {
   const top = 50;
@@ -29,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function NewCardModal({ comments = [], addCard, open, setOpen, weirdId }) {
+export default function NewCardModal({ comments=[], addCard, open, setOpen, weirdId }) {
   const classes = useStyles();
   const [modalStyle] = React.useState(getModalStyle);
   const [url, setUrl] = React.useState("");
@@ -41,6 +40,12 @@ export default function NewCardModal({ comments = [], addCard, open, setOpen, we
   const handleClose = () => {
     setOpen(false);
   };
+
+  const validateNewCard = () => {
+    if(url.length === 0) {
+     setUrl("error")
+    }
+  }
 
   const body = (
     <div style={modalStyle} className={classes.paper}>
@@ -97,19 +102,8 @@ export default function NewCardModal({ comments = [], addCard, open, setOpen, we
         />
         <Box mt={2} ml={1}>
           <Button
-            onClick={(e) => {
-              e.preventDefault()
-              db.collection('products').add(
-                {
-                  id: Date.now(),
-                  imageUrl: url,
-                  name,
-                  description,
-                  count: pieces,
-                  weight,
-                  comments
-                })
-
+            onClick={() => {
+              validateNewCard()
               addCard(url, name, description, pieces, weight, weirdId)
             }}
             color="inherit"

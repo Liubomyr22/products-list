@@ -138,9 +138,25 @@ function App() {
     setCard(cardsData => cardsData.map(card => card.id === id ? data : card))
   }
 
-  const addCard = () => {
-    setCard([...card])
-    setOpen(false)
+  const addCard = (url, name, description, pieces, weight,comments = []) => {
+    if(url.length === 0 || name.length === 0 || description.length === 0 || pieces.length === 0 || weight.length === 0 ){
+      
+      setOpen(true)
+      setCard([])
+    }else{
+      setCard([...card, db.collection('products').add(
+        {
+          id: Date.now(),
+          imageUrl: url,
+          name,
+          description,
+          count: pieces,
+          weight,
+          comments
+        })])
+      setOpen(false)
+    }
+   
   }
 
   const filterByName = () => {
