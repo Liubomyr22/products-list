@@ -5,9 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import ProductCard from '../src/components/Card/index'
 import NewCardModal from './components/Modal/newCardModal';
 import Input from '@material-ui/core/Input'
-import {NavLink, Route} from 'react-router-dom'
-import CardInfo from './components/CardInfo';
-import DeleteModal from './components/Modal/deleteModal';
+import Loader from './components/Loader';
 
 
 // const products = [
@@ -108,7 +106,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'space-between',
     flexWrap: 'wrap',
-    marginTop: theme.spacing(23),
+    marginTop: theme.spacing(20),
   },
   input: {
     background: "#999"
@@ -116,11 +114,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function App() {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(false)
+  const [openNewCard, setOpenNewCard] = React.useState(false)
   const [card, setCard] = React.useState([]);
   const [search, setSearch] = React.useState('')
+  const [loader, setLoader] = React.useState(false)
 
   React.useEffect(() => {
+    setLoader(true)
     db.collection('products').get().then(snapshot => {
       const products = []
       snapshot.forEach(doc => {
@@ -129,29 +130,28 @@ function App() {
         products.push(data)
       })
       setCard(products)
+      setLoader(false)
     })
       .catch(error => console.log(error))
   }, [open])
 
   const classes = useStyles();
 
-  const addCard = (url, name, description, pieces, weight,comments = [],id) => {
-    if(url.length === 0 || name.length === 0 || description.length === 0 || pieces.length === 0 || weight.length === 0 ){
-      setOpen(true)
-    }else{
+  const addCard = (url, name, description, pieces, weight) => {
+    if (url.length === 0 || name.length === 0 || description.length === 0 || pieces.length === 0 || weight.length === 0) {
+    } else {
       setCard([...card, db.collection('products').add(
         {
-          // id,
           imageUrl: url,
           name,
           description,
           count: pieces,
           weight,
-          comments
+          comments: []
         })])
-      setOpen(false)
+      setOpenNewCard(false)
+      setOpen(bool => !bool)
     }
-   
   }
 
   const filterByName = () => {
@@ -189,42 +189,43 @@ function App() {
         })
         setCard(products)
       })
-    }else if (search.length > 0) {
+    } else if (search.length > 0) {
       setCard(card => card.filter(elem => elem.name.toLowerCase().startsWith(search) || elem.name.toUpperCase().startsWith(search)))
     }
   }, [search])
 
   return (
-    <> 
-      {open && <NewCardModal  card={card} setCard={setCard} addCard={addCard} open={open} setOpen={setOpen} />}
-      
+    <>
+      {openNewCard && <NewCardModal card={card} setCard={setCard} addCard={addCard} open={openNewCard} setOpen={setOpenNewCard} />}
+
       <AppBar position="fixed">
         <Container fixed>
           <Toolbar>
             <Box p={1}>
-              <Input className={classes.input} placeholder="  AutoComplete" id="outlined-basic"  variant="filled"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                value={search} onChange={(e) => {        
+              <Input className={classes.input} placeholder="  Enter name" id="outlined-basic" variant="filled"
+                value={search} onChange={(e) => {
                   setSearch(e.target.value)
                 }}
               />
             </Box>
             <Box ml={1}>
-              <Button style={{height:"38px",padding: "7px" ,fontSize: "11px"}} onClick={() => filterByName()} color="inherit" variant="outlined">Sort by name</Button>
+              <Button style={{ height: "38px", padding: "7px", fontSize: "11px" }} onClick={() => filterByName()} color="inherit" variant="outlined">Sort by name</Button>
             </Box>
             <Box ml={1}>
-              <Button style={{height:"38px",padding: "7px" ,fontSize: "11px"}} onClick={() => filterByCount()} color="inherit" variant="outlined">Sort by count</Button>
+              <Button style={{ height: "38px", padding: "7px", fontSize: "11px" }} onClick={() => filterByCount()} color="inherit" variant="outlined">Sort by count</Button>
             </Box>
             <Box ml={2} >
-              <Button style={{height:"38px",padding: "7px" ,fontSize: "12px"}} onClick={() => setOpen(true)} color="inherit" variant="outlined">New</Button>
+              <Button style={{ height: "38px", padding: "7px", fontSize: "12px" }} onClick={() => setOpenNewCard(true)} color="inherit" variant="outlined">New</Button>
             </Box>
           </Toolbar>
         </Container>
       </AppBar>
-      <Container maxWidth="lg">  
+      <Container maxWidth="lg">
+        <div style={{ marginLeft: '47%', marginTop: "100px" }}>
+          {loader && <Loader />}
+        </div>
         <main className={classes.cardsContent}>
+
           {card.map(elem => {
             return <Box key={Math.random()} mr={3} padding={2}>
               <ProductCard key={elem.description} imageUrl={elem.imageUrl}
@@ -237,15 +238,16 @@ function App() {
                 id={elem.id}
                 addCard={addCard}
                 setCard={setCard}
-                card={card}    
+                card={card}
                 wId={elem.weirdId}
-                setOpen={setOpen}
+                setOpenTwo={setOpen}
+                setOpen={setOpenNewCard}
               />
             </Box>
           })}
         </main>
       </Container>
-      
+
     </>
   );
 }

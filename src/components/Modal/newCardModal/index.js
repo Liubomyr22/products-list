@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function NewCardModal({ comments=[], addCard, open, setOpen, weirdId }) {
+export default function NewCardModal({ comments = [], addCard, open, setOpen, weirdId }) {
   const classes = useStyles();
   const [modalStyle] = React.useState(getModalStyle);
   const [url, setUrl] = React.useState("");
@@ -105,7 +105,7 @@ export default function NewCardModal({ comments=[], addCard, open, setOpen, weir
           <Button
             onClick={() => {
               validateNewCard()
-              addCard(url, name, description, pieces, weight, weirdId)
+              addCard(url, name, description, pieces, weight, weirdId= 33,comments)
             }}
             color="inherit"
             variant="outlined"

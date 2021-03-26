@@ -19,7 +19,9 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteModal from "../Modal/deleteModal";
 import {NavLink} from "react-router-dom"
 import CardInfo from "../CardInfo";
-import {db} from "../../services/firebase"
+import {db} from "../../services/firebase";
+import firebase from "firebase";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -57,38 +59,40 @@ export default function ProductCard({
   description,
   comments = [],
   weight,
-  updateCardItem,
+  setOpenTwo,
   setOpen,
   wId,
 }) {
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(false);
+  const [expand, setExpand] = React.useState(false);
   const [openEdit, setOpenEdit] = React.useState(false);
   const [deleteCard, setDeleteCard] = React.useState(false);
   const [value, setValue] = React.useState("");
   const [commentar,setCommentar] = React.useState(false);
-  const [y,setY] = React.useState(false)
-  
-  React.useEffect(() => {},[y])
-
+ 
   React.useEffect(() => {
   },[commentar])
 
   const handleExpandClick = () => {
-    setExpanded(!expanded);
+    setExpand(!expand);
   };
 
   const addComment = () => {
     if(value.length > 0){
+      db.collection('products').doc(wId).update({
+        comments:[...comments,value]
+      })
       comments.push(value)
     } 
     setValue("");
   };
-console.log("hello luco")
   const removeComment = (comment) => {
     for(let i = 0; i < comments.length;i++){
       if(comments[i] === comment) {
         comments.splice(i,1)
+        db.collection('products').doc(wId).update({
+          comments: firebase.firestore.FieldValue.arrayRemove(comment)
+        })
       }
     }
   setCommentar(!commentar)
@@ -100,12 +104,12 @@ console.log("hello luco")
     description,
     count,
     weight,
-    id
+    id = Math.random(),
+    comments 
      
   ) => {
-    // console.log(name)
-    // console.log(wId)
-      db.collection('products').doc(wId).set({
+    console.log(comments)
+      db.collection('products').doc(wId).update({
       imageUrl: changeUrl,
       name,
       description,
@@ -114,13 +118,10 @@ console.log("hello luco")
       id,
       comments
     });
-    // setY(!y)
+    setOpenTwo(bool => !bool)
     setOpenEdit(false);  
   }; 
 
-
-
-  
    <CardInfo url={imageUrl} name={name} count={count} />
   
   return (
@@ -138,6 +139,9 @@ console.log("hello luco")
           weight={weight}
           weirdId={wId}
           comments={comments}
+          setCard={setCard}
+          card={card}
+          wId={wId}
         />
       )}
       {deleteCard && (
@@ -187,9 +191,8 @@ console.log("hello luco")
           </Typography>
           <Box ml={2}>
             <Button
-              style={{ width: "75px" }}
+              style={{ width: "75px",color:"black" }}
               onClick={() => setOpenEdit(true)}
-              color="inherit"
               variant="outlined"
             >
               Edit
@@ -199,25 +202,25 @@ console.log("hello luco")
             <Button
               style={{ width: "75px" }}
               onClick={() => <CardInfo url={imageUrl} name={name} count={count} />}
-              color="inherit"
+              
               variant="outlined"
-            ><NavLink  to="/info">
+            ><NavLink  style={{color:"black",textDecoration:"none"}} to="/info">
             Details
             </NavLink>  
             </Button>
           </Box>
           <IconButton
             className={clsx(classes.expand, {
-              [classes.expandOpen]: expanded,
+              [classes.expandOpen]: expand,
             })}
             onClick={handleExpandClick}
-            aria-expanded={expanded}
+            aria-expanded={expand}
             aria-label="show more"
           >
             <ExpandMoreIcon />
           </IconButton>
         </CardActions>
-        <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <Collapse in={expand} timeout="auto" unmountOnExit>
           <CardContent>
             <Typography paragraph>Comments:</Typography>
             {comments.map((elem) => {

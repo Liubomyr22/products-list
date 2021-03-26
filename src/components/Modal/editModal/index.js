@@ -5,6 +5,7 @@ import Input from "@material-ui/core/Input";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 
+
 function getModalStyle() {
   const top = 50;
   const left = 50;
@@ -30,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
 export default function EditModal({
   open,
   setOpen,
+  comments,
   changeCardInformation,
   id,
   name,
@@ -37,6 +39,9 @@ export default function EditModal({
   count,
   description,
   weight,
+  wId,
+  setCard,
+  card
 }) {
   const classes = useStyles();
 
@@ -46,8 +51,11 @@ export default function EditModal({
   const [changeDescription, setChangeDescription] = React.useState(description);
   const [changePieces, setChangePieces] = React.useState(count);
   const [changeWeight, setChangeWeight] = React.useState(weight);
+  // const [update,setUpdate] = React.useState(4)
+
 
   const handleClose = () => {
+ 
     setOpen(false);
   };
 
@@ -107,8 +115,8 @@ export default function EditModal({
       </form>
       <Box mt={2} ml={1}>
         <Button
-          onClick={(e) => {
-            e.preventDefault();
+          onClick={() => 
+            
             changeCardInformation(
               changeUrl,
               changeName,
@@ -116,8 +124,10 @@ export default function EditModal({
               changePieces,
               changeWeight,
               id,
-            );
-          }}
+              comments
+            )
+         
+          }
           color="inherit"
           variant="outlined"
         >
