@@ -197,7 +197,7 @@ function App() {
     <>
       {openNewCard && <NewCardModal card={card} setCard={setCard} addCard={addCard} open={openNewCard} setOpen={setOpenNewCard} />}
       <AppBar position="fixed">
-        <Container fixed>
+        <Container fixed={true}>
           <Toolbar>
             <Box p={1}>
               <Input className={classes.input} placeholder="  Enter name" id="outlined-basic" variant="filled"

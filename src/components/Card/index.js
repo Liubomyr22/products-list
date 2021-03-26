@@ -172,7 +172,7 @@ export default function ProductCard({
             {description}
           </Typography>
         </CardContent>
-        <CardActions disableSpacing>
+        <CardActions disableSpacing={true}>
           <Typography
             className={classes.description}
             variant="body2"
@@ -215,14 +215,14 @@ export default function ProductCard({
             <ExpandMoreIcon />
           </IconButton>
         </CardActions>
-        <Collapse in={expand} timeout="auto" unmountOnExit>
+        <Collapse in={expand} timeout="auto" unmountOnExit={true}>
           <CardContent>
-            <Typography paragraph>Comments:</Typography>
+            <Typography paragraph={true}>Comments:</Typography>
             {comments.map((elem) => {
               return (
                 <Box key={Math.random()} style={{ position: "relative" }}>
 
-                  <Typography paragraph>
+                  <Typography paragraph={true}>
                     {elem}
                     <DeleteIcon
                       style={{ position: "absolute", right: "-4%" }}
@@ -240,14 +240,14 @@ export default function ProductCard({
                 e.preventDefault()
                 setValue(e.target.value);
               }}
-              fullWidth
+              fullWidth={true}
               id="standard-basic"
             />
           </Box>
           <Box m={1}>
             <Button
               onClick={() => addComment()}
-              fullWidth
+              fullWidth={true}
               variant="contained"
               color="primary"
               className={classes.button}

@@ -57,7 +57,7 @@ export default function NewCardModal({ comments = [], addCard, open, setOpen, we
             setUrl(e.target.value);
           }}
           style={{ margin: "8px" }}
-          fullWidth
+          fullWidth={true}
           placeholder={error ? "Field can not be empty,enter URL" : "Enter image URL "}
           inputProps={{ "aria-label": "description" }}
         />
@@ -67,7 +67,7 @@ export default function NewCardModal({ comments = [], addCard, open, setOpen, we
             setName(e.target.value);
           }}
           style={{ margin: "8px" }}
-          fullWidth
+          fullWidth={true}
           placeholder={error ? "Field can not be empty,enter Name" : "Enter the name of product"}
           inputProps={{ "aria-label": "description" }}
         />
@@ -77,7 +77,7 @@ export default function NewCardModal({ comments = [], addCard, open, setOpen, we
             setDescription(e.target.value);
           }}
           style={{ margin: "8px" }}
-          fullWidth
+          fullWidth={true}
           placeholder={error ? "Field can not be empty,enter description" : "Enter description"}
           inputProps={{ "aria-label": "description" }}
         />
@@ -87,7 +87,7 @@ export default function NewCardModal({ comments = [], addCard, open, setOpen, we
             setPieces(e.target.value);
           }}
           style={{ margin: "8px" }}
-          fullWidth
+          fullWidth={true}
           placeholder={error ? "Field can not be empty,enter pieces" : "Enter how many pieces is left"}
           inputProps={{ "aria-label": "description" }}
         />
@@ -97,7 +97,7 @@ export default function NewCardModal({ comments = [], addCard, open, setOpen, we
             setWeight(e.target.value);
           }}
           style={{ margin: "8px" }}
-          fullWidth
+          fullWidth={true}
           placeholder={error ? "Field can not be empty,enter weight" : "Enter weight of product"}
           inputProps={{ "aria-label": "description" }}
         />

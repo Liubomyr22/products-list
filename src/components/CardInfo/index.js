@@ -40,7 +40,7 @@ const CardInfo = () => {
       <div className={classes.root}>
         <Box style={{ width: "90%", display: "flex", justifyContent: "flex-end" }}>
           <NavLink style={{ textDecoration: "none" }} to="/">
-            <Button style={{ background: "gray" }} variant="outlined" color="black" >
+            <Button style={{ background: "gray",color:"black" }} variant="outlined"  >
               Home
           </Button>
           </NavLink>
