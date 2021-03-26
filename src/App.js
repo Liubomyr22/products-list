@@ -7,7 +7,6 @@ import NewCardModal from './components/Modal/newCardModal';
 import Input from '@material-ui/core/Input'
 import Loader from './components/Loader';
 
-
 // const products = [
 //   {
 //     id: 1,
@@ -197,7 +196,6 @@ function App() {
   return (
     <>
       {openNewCard && <NewCardModal card={card} setCard={setCard} addCard={addCard} open={openNewCard} setOpen={setOpenNewCard} />}
-
       <AppBar position="fixed">
         <Container fixed>
           <Toolbar>
@@ -225,7 +223,6 @@ function App() {
           {loader && <Loader />}
         </div>
         <main className={classes.cardsContent}>
-
           {card.map(elem => {
             return <Box key={Math.random()} mr={3} padding={2}>
               <ProductCard key={elem.description} imageUrl={elem.imageUrl}
@@ -247,7 +244,6 @@ function App() {
           })}
         </main>
       </Container>
-
     </>
   );
 }

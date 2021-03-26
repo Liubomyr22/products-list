@@ -17,9 +17,8 @@ import TextField from "@material-ui/core/TextField";
 import Icon from "@material-ui/core/Icon";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteModal from "../Modal/deleteModal";
-import {NavLink} from "react-router-dom"
-import CardInfo from "../CardInfo";
-import {db} from "../../services/firebase";
+import { NavLink } from "react-router-dom"
+import { db } from "../../services/firebase";
 import firebase from "firebase";
 
 
@@ -43,9 +42,7 @@ const useStyles = makeStyles((theme) => ({
   },
   description: {
     height: "80px",
-    overflow:"auto",
-  
-  
+    overflow: "auto",
   }
 }));
 
@@ -68,34 +65,34 @@ export default function ProductCard({
   const [openEdit, setOpenEdit] = React.useState(false);
   const [deleteCard, setDeleteCard] = React.useState(false);
   const [value, setValue] = React.useState("");
-  const [commentar,setCommentar] = React.useState(false);
- 
+  const [commentar, setCommentar] = React.useState(false);
+
   React.useEffect(() => {
-  },[commentar])
+  }, [commentar])
 
   const handleExpandClick = () => {
     setExpand(!expand);
   };
 
   const addComment = () => {
-    if(value.length > 0){
+    if (value.length > 0) {
       db.collection('products').doc(wId).update({
-        comments:[...comments,value]
+        comments: [...comments, value]
       })
       comments.push(value)
-    } 
+    }
     setValue("");
   };
   const removeComment = (comment) => {
-    for(let i = 0; i < comments.length;i++){
-      if(comments[i] === comment) {
-        comments.splice(i,1)
+    for (let i = 0; i < comments.length; i++) {
+      if (comments[i] === comment) {
+        comments.splice(i, 1)
         db.collection('products').doc(wId).update({
           comments: firebase.firestore.FieldValue.arrayRemove(comment)
         })
       }
     }
-  setCommentar(!commentar)
+    setCommentar(!commentar)
   };
 
   const changeCardInformation = (
@@ -105,11 +102,11 @@ export default function ProductCard({
     count,
     weight,
     id = Math.random(),
-    comments 
-     
+    comments
+
   ) => {
     console.log(comments)
-      db.collection('products').doc(wId).update({
+    db.collection('products').doc(wId).update({
       imageUrl: changeUrl,
       name,
       description,
@@ -119,11 +116,9 @@ export default function ProductCard({
       comments
     });
     setOpenTwo(bool => !bool)
-    setOpenEdit(false);  
-  }; 
+    setOpenEdit(false);
+  };
 
-   <CardInfo url={imageUrl} name={name} count={count} />
-  
   return (
     <>
       {openEdit && (
@@ -146,7 +141,7 @@ export default function ProductCard({
       )}
       {deleteCard && (
         <DeleteModal
-        setCloseCard={setOpen}
+          setCloseCard={setOpen}
           id={wId}
           card={card}
           setCard={setCard}
@@ -166,9 +161,9 @@ export default function ProductCard({
           }
           title={name}
         />
-        <CardMedia  className={classes.media} image={imageUrl} />
+        <CardMedia className={classes.media} image={imageUrl} />
         <CardContent >
-          <Typography 
+          <Typography
             className={classes.description}
             variant="body2"
             color="textSecondary"
@@ -191,7 +186,7 @@ export default function ProductCard({
           </Typography>
           <Box ml={2}>
             <Button
-              style={{ width: "75px",color:"black" }}
+              style={{ width: "75px", color: "black" }}
               onClick={() => setOpenEdit(true)}
               variant="outlined"
             >
@@ -199,15 +194,15 @@ export default function ProductCard({
             </Button>
           </Box>
           <Box ml={2}>
-            <Button
-              style={{ width: "75px" }}
-              onClick={() => <CardInfo url={imageUrl} name={name} count={count} />}
-              
-              variant="outlined"
-            ><NavLink  style={{color:"black",textDecoration:"none"}} to="/info">
-            Details
-            </NavLink>  
+            <NavLink style={{ color: "black", textDecoration: "none" }} to="/info">
+              <Button
+                style={{ width: "75px", color: "black" }}
+                variant="outlined"
+
+              >
+                Details
             </Button>
+            </NavLink>
           </Box>
           <IconButton
             className={clsx(classes.expand, {
@@ -226,7 +221,7 @@ export default function ProductCard({
             {comments.map((elem) => {
               return (
                 <Box key={Math.random()} style={{ position: "relative" }}>
-                
+
                   <Typography paragraph>
                     {elem}
                     <DeleteIcon
@@ -247,7 +242,6 @@ export default function ProductCard({
               }}
               fullWidth
               id="standard-basic"
-              // label="Leave your comment"
             />
           </Box>
           <Box m={1}>
@@ -257,16 +251,13 @@ export default function ProductCard({
               variant="contained"
               color="primary"
               className={classes.button}
-              
             >
-            {" "}  
-              Send{""}
-              <Icon>send    </Icon>
+              Send{''}  {' '}
+              <Icon>send</Icon>
             </Button>
           </Box>
         </Collapse>
       </Card>
-      
     </>
   );
 }

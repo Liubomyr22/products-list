@@ -34,24 +34,19 @@ export default function DeleteModal({
   id,
   card,
   setCard,
-  updateState,
 }) {
   const classes = useStyles();
   const [modalStyle] = React.useState(getModalStyle);
   const [x, setX] = React.useState(false);
 
-
-  React.useEffect(() => {
-
-  },[x])
+  React.useEffect(() => { }, [x])
 
   const closeCard = (id) => {
-  
     setX(!x)
-    setCard(() => card.filter(elem => elem.weirdId !== id ))
-     db.collection("products").doc(id).delete()
+    setCard(() => card.filter(elem => elem.weirdId !== id))
+    db.collection("products").doc(id).delete()
     setDeleteCard(false)
-  
+
   };
 
   const body = (

@@ -36,15 +36,15 @@ export default function NewCardModal({ comments = [], addCard, open, setOpen, we
   const [description, setDescription] = React.useState("");
   const [pieces, setPieces] = React.useState("");
   const [weight, setWeight] = React.useState("");
-  const [error,setError] = React.useState(false)
+  const [error, setError] = React.useState(false)
 
   const handleClose = () => {
     setOpen(false);
   };
 
   const validateNewCard = () => {
-    if(url.length === 0) {
-     setError(true)
+    if (url.length === 0) {
+      setError(true)
     }
   }
 
@@ -68,7 +68,7 @@ export default function NewCardModal({ comments = [], addCard, open, setOpen, we
           }}
           style={{ margin: "8px" }}
           fullWidth
-          placeholder={error ? "Field can not be empty,enter Name" : "Enter the name of product" }
+          placeholder={error ? "Field can not be empty,enter Name" : "Enter the name of product"}
           inputProps={{ "aria-label": "description" }}
         />
         <Input
@@ -105,7 +105,7 @@ export default function NewCardModal({ comments = [], addCard, open, setOpen, we
           <Button
             onClick={() => {
               validateNewCard()
-              addCard(url, name, description, pieces, weight, weirdId= 33,comments)
+              addCard(url, name, description, pieces, weight, weirdId, comments)
             }}
             color="inherit"
             variant="outlined"

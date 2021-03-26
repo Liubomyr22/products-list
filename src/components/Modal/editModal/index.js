@@ -39,9 +39,6 @@ export default function EditModal({
   count,
   description,
   weight,
-  wId,
-  setCard,
-  card
 }) {
   const classes = useStyles();
 
@@ -51,11 +48,9 @@ export default function EditModal({
   const [changeDescription, setChangeDescription] = React.useState(description);
   const [changePieces, setChangePieces] = React.useState(count);
   const [changeWeight, setChangeWeight] = React.useState(weight);
-  // const [update,setUpdate] = React.useState(4)
-
 
   const handleClose = () => {
- 
+
     setOpen(false);
   };
 
@@ -115,8 +110,7 @@ export default function EditModal({
       </form>
       <Box mt={2} ml={1}>
         <Button
-          onClick={() => 
-            
+          onClick={() =>
             changeCardInformation(
               changeUrl,
               changeName,
@@ -126,7 +120,6 @@ export default function EditModal({
               id,
               comments
             )
-         
           }
           color="inherit"
           variant="outlined"
