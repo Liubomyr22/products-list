@@ -36,6 +36,7 @@ export default function NewCardModal({ comments=[], addCard, open, setOpen, weir
   const [description, setDescription] = React.useState("");
   const [pieces, setPieces] = React.useState("");
   const [weight, setWeight] = React.useState("");
+  const [error,setError] = React.useState(false)
 
   const handleClose = () => {
     setOpen(false);
@@ -43,7 +44,7 @@ export default function NewCardModal({ comments=[], addCard, open, setOpen, weir
 
   const validateNewCard = () => {
     if(url.length === 0) {
-     setUrl("error")
+     setError(true)
     }
   }
 
@@ -57,7 +58,7 @@ export default function NewCardModal({ comments=[], addCard, open, setOpen, weir
           }}
           style={{ margin: "8px" }}
           fullWidth
-          placeholder="Enter image URL "
+          placeholder={error ? "Field can not be empty,enter URL" : "Enter image URL "}
           inputProps={{ "aria-label": "description" }}
         />
         <Input
@@ -67,7 +68,7 @@ export default function NewCardModal({ comments=[], addCard, open, setOpen, weir
           }}
           style={{ margin: "8px" }}
           fullWidth
-          placeholder="Enter the name of product "
+          placeholder={error ? "Field can not be empty,enter Name" : "Enter the name of product" }
           inputProps={{ "aria-label": "description" }}
         />
         <Input
@@ -77,7 +78,7 @@ export default function NewCardModal({ comments=[], addCard, open, setOpen, weir
           }}
           style={{ margin: "8px" }}
           fullWidth
-          placeholder="Enter description"
+          placeholder={error ? "Field can not be empty,enter description" : "Enter description"}
           inputProps={{ "aria-label": "description" }}
         />
         <Input
@@ -87,7 +88,7 @@ export default function NewCardModal({ comments=[], addCard, open, setOpen, weir
           }}
           style={{ margin: "8px" }}
           fullWidth
-          placeholder="Enter how many pieces is left"
+          placeholder={error ? "Field can not be empty,enter pieces" : "Enter how many pieces is left"}
           inputProps={{ "aria-label": "description" }}
         />
         <Input
@@ -97,7 +98,7 @@ export default function NewCardModal({ comments=[], addCard, open, setOpen, weir
           }}
           style={{ margin: "8px" }}
           fullWidth
-          placeholder="Enter weight of product"
+          placeholder={error ? "Field can not be empty,enter weight" : "Enter weight of product"}
           inputProps={{ "aria-label": "description" }}
         />
         <Box mt={2} ml={1}>

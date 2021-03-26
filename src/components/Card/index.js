@@ -17,6 +17,9 @@ import TextField from "@material-ui/core/TextField";
 import Icon from "@material-ui/core/Icon";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteModal from "../Modal/deleteModal";
+import {NavLink} from "react-router-dom"
+import CardInfo from "../CardInfo";
+import {db} from "../../services/firebase"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -64,6 +67,9 @@ export default function ProductCard({
   const [deleteCard, setDeleteCard] = React.useState(false);
   const [value, setValue] = React.useState("");
   const [commentar,setCommentar] = React.useState(false);
+  const [y,setY] = React.useState(false)
+  
+  React.useEffect(() => {},[y])
 
   React.useEffect(() => {
   },[commentar])
@@ -77,8 +83,6 @@ export default function ProductCard({
       comments.push(value)
     } 
     setValue("");
-    console.log(comments)
-   
   };
 console.log("hello luco")
   const removeComment = (comment) => {
@@ -95,23 +99,30 @@ console.log("hello luco")
     name,
     description,
     count,
-    weight = "",
-    id,
-    wId
+    weight,
+    id
+     
   ) => {
-    updateCardItem(id, {
+    // console.log(name)
+    // console.log(wId)
+      db.collection('products').doc(wId).set({
       imageUrl: changeUrl,
-      name: name,
+      name,
       description,
       count,
       weight,
       id,
-      wId, 
       comments
     });
-    setOpenEdit(false);
+    // setY(!y)
+    setOpenEdit(false);  
   }; 
 
+
+
+  
+   <CardInfo url={imageUrl} name={name} count={count} />
+  
   return (
     <>
       {openEdit && (
@@ -174,14 +185,25 @@ console.log("hello luco")
             <br></br>
             <b>{`${count} pieces left.`}</b>
           </Typography>
-          <Box ml={3}>
+          <Box ml={2}>
             <Button
-              style={{ width: "150px" }}
+              style={{ width: "75px" }}
               onClick={() => setOpenEdit(true)}
               color="inherit"
               variant="outlined"
             >
               Edit
+            </Button>
+          </Box>
+          <Box ml={2}>
+            <Button
+              style={{ width: "75px" }}
+              onClick={() => <CardInfo url={imageUrl} name={name} count={count} />}
+              color="inherit"
+              variant="outlined"
+            ><NavLink  to="/info">
+            Details
+            </NavLink>  
             </Button>
           </Box>
           <IconButton
@@ -200,7 +222,7 @@ console.log("hello luco")
             <Typography paragraph>Comments:</Typography>
             {comments.map((elem) => {
               return (
-                <Box  style={{ position: "relative" }}>
+                <Box key={Math.random()} style={{ position: "relative" }}>
                 
                   <Typography paragraph>
                     {elem}
@@ -222,7 +244,7 @@ console.log("hello luco")
               }}
               fullWidth
               id="standard-basic"
-              label="Leave your comment"
+              // label="Leave your comment"
             />
           </Box>
           <Box m={1}>
@@ -232,14 +254,16 @@ console.log("hello luco")
               variant="contained"
               color="primary"
               className={classes.button}
-              endIcon={<Icon>send</Icon>}
+              
             >
-              {" "}
-              Send{" "}
+            {" "}  
+              Send{""}
+              <Icon>send    </Icon>
             </Button>
           </Box>
         </Collapse>
       </Card>
+      
     </>
   );
 }

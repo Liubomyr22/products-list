@@ -5,6 +5,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import ProductCard from '../src/components/Card/index'
 import NewCardModal from './components/Modal/newCardModal';
 import Input from '@material-ui/core/Input'
+import {NavLink, Route} from 'react-router-dom'
+import CardInfo from './components/CardInfo';
+import DeleteModal from './components/Modal/deleteModal';
 
 
 // const products = [
@@ -130,23 +133,15 @@ function App() {
       .catch(error => console.log(error))
   }, [open])
 
-  // console.log('hello world')
-
   const classes = useStyles();
 
-  const updateCardItem = (id, data) => {
-    setCard(cardsData => cardsData.map(card => card.id === id ? data : card))
-  }
-
-  const addCard = (url, name, description, pieces, weight,comments = []) => {
+  const addCard = (url, name, description, pieces, weight,comments = [],id) => {
     if(url.length === 0 || name.length === 0 || description.length === 0 || pieces.length === 0 || weight.length === 0 ){
-      
       setOpen(true)
-      setCard([])
     }else{
       setCard([...card, db.collection('products').add(
         {
-          id: Date.now(),
+          // id,
           imageUrl: url,
           name,
           description,
@@ -160,11 +155,27 @@ function App() {
   }
 
   const filterByName = () => {
-    setCard(card => card.filter(elem => elem.name.toLowerCase().includes(search) || elem.name.toUpperCase().includes(search)))
+    setCard([...card].sort((a, b) => {
+      if (a.name.toLowerCase().toUpperCase() > b.name.toLowerCase().toUpperCase()) {
+        return 1;
+      }
+      if (a.name.toLowerCase().toUpperCase() < b.name.toLowerCase().toUpperCase()) {
+        return -1;
+      }
+      return 0;
+    }))
   }
 
   const filterByCount = () => {
-    setCard(card => card.filter(elem => elem.count.toString().includes(search)))
+    setCard([...card].sort((a, b) => {
+      if (a.count > b.count) {
+        return 1;
+      }
+      if (a.count < b.count) {
+        return -1;
+      }
+      return 0;
+    }))
   }
 
   React.useEffect(() => {
@@ -178,22 +189,24 @@ function App() {
         })
         setCard(products)
       })
+    }else if (search.length > 0) {
+      setCard(card => card.filter(elem => elem.name.toLowerCase().startsWith(search) || elem.name.toUpperCase().startsWith(search)))
     }
   }, [search])
 
   return (
-    <>
+    <> 
       {open && <NewCardModal  card={card} setCard={setCard} addCard={addCard} open={open} setOpen={setOpen} />}
+      
       <AppBar position="fixed">
         <Container fixed>
           <Toolbar>
             <Box p={1}>
-              <Input className={classes.input} placeholder="Enter name or count" id="outlined-basic" label="Search by name" variant="filled"
+              <Input className={classes.input} placeholder="  AutoComplete" id="outlined-basic"  variant="filled"
                 InputLabelProps={{
                   shrink: true,
                 }}
-                value={search} onChange={(e) => {
-                  e.preventDefault();
+                value={search} onChange={(e) => {        
                   setSearch(e.target.value)
                 }}
               />
@@ -210,11 +223,11 @@ function App() {
           </Toolbar>
         </Container>
       </AppBar>
-      <Container maxWidth="lg">
+      <Container maxWidth="lg">  
         <main className={classes.cardsContent}>
           {card.map(elem => {
-            return <Box key={elem.id} mr={3} padding={2}>
-              <ProductCard key={elem.weirdId} imageUrl={elem.imageUrl}
+            return <Box key={Math.random()} mr={3} padding={2}>
+              <ProductCard key={elem.description} imageUrl={elem.imageUrl}
                 name={elem.name}
                 count={elem.count}
                 size={elem.size}
@@ -224,8 +237,7 @@ function App() {
                 id={elem.id}
                 addCard={addCard}
                 setCard={setCard}
-                card={card}
-                updateCardItem={updateCardItem}
+                card={card}    
                 wId={elem.weirdId}
                 setOpen={setOpen}
               />
@@ -233,6 +245,7 @@ function App() {
           })}
         </main>
       </Container>
+      
     </>
   );
 }
